@@ -541,27 +541,27 @@ function sendBoxcarPush(lul_device, title, long_message, source_name, sound, ico
    data = readSettings(lul_device)
    local application = tostring( data.boxcarapplication )
    
-   if ( title == nil ) then
+   if ( title == nil or title == "") then
         title = ""
-    end
-   if ( long_message == nil ) then
+   end
+   if ( long_message == nil or long_message == "") then
         long_message = ""
    end
-   if ( source_name == nil ) then
-        source_name = ""
+   if ( source_name == nil or source_name == "") then
+        source_name = readVariableOrInit(lul_device,ITEM_SID,"BoxcarSourceName","")
     end
-   if ( sound == nil ) then
-        sound = ""
+   if ( sound == nil or sound == "") then
+        sound = readVariableOrInit(lul_device,ITEM_SID,"BoxcarDefaultSound","")
     end
-   if ( icon_url == nil ) then
-        icon_url = ""
+   if ( icon_url == nil or icon_url == "") then
+        icon_url = readVariableOrInit(lul_device,ITEM_SID,"BoxcarDefaultIcon","")
     end
-   if ( open_url == nil ) then
+   if ( open_url == nil or open_url == "") then
         open_url = ""
     end
 	
 	if ( tonumber(data.boxcaraddserialtosubject)  ~= 0) then
-     source_name = source_name .. "\091" .. luup.pk_accesspoint .. "\093 "
+     source_name = source_name .. " \091" .. luup.pk_accesspoint .. "\093 "
    end
    
    log( lul_device, "BoxcarNotification(" .. (source_name) ..")[" .. application .. "] Subject(" .. title .. ") Body(" .. long_message .. ")", 1 )  
@@ -574,10 +574,18 @@ function sendBoxcarPush(lul_device, title, long_message, source_name, sound, ico
 
 	local request_body = "user_credentials=" .. url_encode(user_credentials) .. "\038"  .. "notification[title]=" .. title .. "\038" .. "notification[long_message]=" .. long_message
 	
-	if (string.len(sound) > 0) then request_body = request_body .. "\038" .. "notification[sound]=" .. url_encode(sound) end
-	if (string.len(source_name) > 0) then request_body = request_body .. "\038" .. "notification[source_name]=" .. url_encode(source_name) end
-	if (string.len(icon_url) > 0) then request_body = request_body .. "\038" .. "notification[icon_url]=" .. url_encode(icon_url) end
-	if (string.len(open_url) > 0) then request_body = request_body .. "\038" .. "notification[open_url]=" .. url_encode(open_url) end
+	if (string.len(sound) > 0) then 
+		request_body = request_body .. "\038" .. "notification[sound]=" .. url_encode(sound) 
+	end
+	if (string.len(source_name) > 0) then 
+		request_body = request_body .. "\038" .. "notification[source_name]=" .. url_encode(source_name) 
+	end
+	if (string.len(icon_url) > 0) then 
+		request_body = request_body .. "\038" .. "notification[icon_url]=" .. url_encode(icon_url) 
+	end
+	if (string.len(open_url) > 0) then 
+		request_body = request_body .. "\038" .. "notification[open_url]=" .. url_encode(open_url) 
+	end
 	
 	local response_body = {}
 
